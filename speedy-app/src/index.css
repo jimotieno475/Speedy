@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+/* Theme variables (swapped by data-theme on <html>) */
+:root {
+  --c-base: #0A1730;
+  --c-panel: #0F1F42;
+  --c-card: #16295A;
+  --c-raised: #1E3572;
+  --c-line: rgba(255, 255, 255, 0.08);
+  --c-ink: #F4F6FB;
+  --c-dim: #8FA0C4;
+  --c-brand: #FF6A1A;
+  --c-brand-soft: rgba(255, 106, 26, 0.14);
+  --c-ok: #38D67A;
+  --c-bad: #FF5C5C;
+}
+html[data-theme="light"] {
+  --c-base: #EEF1F8;
+  --c-panel: #FFFFFF;
+  --c-card: #F4F6FB;
+  --c-raised: #E4E9F5;
+  --c-line: rgba(10, 23, 48, 0.09);
+  --c-ink: #0B1730;
+  --c-dim: #6B7A9C;
+}
+
+/* Expose them as Tailwind utilities: bg-panel, text-dim, border-line, ... */
+@theme inline {
+  --color-base: var(--c-base);
+  --color-panel: var(--c-panel);
+  --color-card: var(--c-card);
+  --color-raised: var(--c-raised);
+  --color-line: var(--c-line);
+  --color-ink: var(--c-ink);
+  --color-dim: var(--c-dim);
+  --color-brand: var(--c-brand);
+  --color-brand-soft: var(--c-brand-soft);
+  --color-ok: var(--c-ok);
+  --color-bad: var(--c-bad);
+
+  --font-sans: "Inter", sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --animate-dash: dash-move 1s linear infinite;
+  --animate-fade: fade-in 0.25s ease;
+  --animate-pulse-ring: pulse-ring 1.8s infinite;
+  --animate-travel: travel 2.4s ease-in-out infinite;
+}
+@keyframes dash-move { to { stroke-dashoffset: -18; } }
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(56, 214, 122, 0.55); }
+  70% { box-shadow: 0 0 0 7px rgba(56, 214, 122, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(56, 214, 122, 0); }
+}
+@keyframes travel { 0% { top: -40%; } 100% { top: 100%; } }
+@keyframes fade-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+@layer base {
+  html, body, #root { height: 100%; }
+  body { @apply bg-base text-ink font-sans transition-colors duration-200; }
+  /* App shells (customer/rider/admin) opt back into a fixed, non-scrolling viewport */
+  .h-dvh { overflow: hidden; }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-thumb { background: var(--c-raised); border-radius: 8px; }
+}
+
+/* Soft orange corner glow used on wallet / promo / payout cards */
+@layer components {
+  .glow { position: relative; overflow: hidden; background: linear-gradient(160deg, var(--c-card), var(--c-panel)); }
+  .glow::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(260px 140px at 100% 0%, var(--c-brand-soft), transparent 70%); }
+  .glow > * { position: relative; z-index: 1; }
+}
